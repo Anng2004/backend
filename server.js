@@ -9,6 +9,14 @@ const prisma = new PrismaClient();
 app.use(express.json());
 
 // Endpoint mẫu: Lấy danh sách tất cả người dùng (dựa trên model User trong schema Prisma)
+//app.get('/users', async (req, res) => {
+//  try {
+//    const users = await prisma.user.findMany();
+//    res.json(users);
+//  } catch (error) {
+//    res.status(500).json({ error: 'Lỗi khi lấy danh sách người dùng' });
+//  }
+//});
 app.get('/users', async (req, res) => {
   try {
     const users = await prisma.user.findMany();
@@ -17,7 +25,6 @@ app.get('/users', async (req, res) => {
     res.status(500).json({ error: 'Lỗi khi lấy danh sách người dùng' });
   }
 });
-
 // Endpoint mẫu: Tạo một người dùng mới
 app.post('/users', async (req, res) => {
   try {
