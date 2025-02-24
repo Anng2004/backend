@@ -4,16 +4,30 @@ const app = express();
 
 const prisma = new PrismaClient();
 
-// Middleware parse JSON
+// ==========================
+// 1. Middleware parse JSON
+// ==========================
 app.use(express.json());
 
-// =======================
-// CHỈ GIỮ LẠI PHẦN NÀY
-// =======================
+// ==========================
+// 2. Middleware log request
+// ==========================
+app.use((req, res, next) => {
+  console.log(`\n--- NEW REQUEST ---`);
+  console.log(`Method: ${req.method}, URL: ${req.url}`);
 
-// POST /users (có log chi tiết)
+  // Nếu muốn log body, hãy cẩn thận với dữ liệu nhạy cảm (password).
+  console.log(`Body:`, req.body);
+
+  next(); // Cho phép request tiếp tục đến endpoint
+});
+
+// ==========================
+// 3. Endpoint POST /users
+// ==========================
 app.post('/users', async (req, res) => {
   try {
+    // Log thêm (nếu muốn)
     console.log("POST /users body:", req.body);
 
     const { username, password, role, name, email } = req.body;
@@ -29,7 +43,9 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// GET /users (có log danh sách)
+// ==========================
+// 4. Endpoint GET /users
+// ==========================
 app.get('/users', async (req, res) => {
   try {
     const users = await prisma.user.findMany();
@@ -41,7 +57,9 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// Chạy server
+// ==========================
+// 5. Khởi động server
+// ==========================
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server đang chạy trên cổng ${port}`);
